@@ -1,6 +1,10 @@
 import { createElement } from "../render.js";
 
-function createWaypointTemplate() {
+function createWaypointTemplate(waypoint) {
+  const { basePrice, dateFrom, dateTo, destination, isFavorite, offers, type } =
+    waypoint;
+  console.log(type);
+
   return `<li class="trip-events__item">
               <div class="event">
                 <time class="event__date" datetime="2019-03-18">MAR 18</time>
@@ -17,7 +21,7 @@ function createWaypointTemplate() {
                   <p class="event__duration">30M</p>
                 </div>
                 <p class="event__price">
-                  &euro;&nbsp;<span class="event__price-value">20</span>
+                  &euro;&nbsp;<span class="event__price-value">${basePrice}</span>
                 </p>
                 <h4 class="visually-hidden">Offers:</h4>
                 <ul class="event__selected-offers">
@@ -41,8 +45,14 @@ function createWaypointTemplate() {
 }
 
 export default class WaypointView {
+  constructor(waypoint) {
+    this.waypoint = waypoint;
+  }
+
   getTemplate() {
-    return createWaypointTemplate();
+    return createWaypointTemplate({
+      waypoint: this.waypoint,
+    });
   }
 
   getElement() {

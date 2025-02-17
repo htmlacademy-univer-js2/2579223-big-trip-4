@@ -8,8 +8,16 @@ import TripInfoView from "../view/trip-info-view";
 import WaypointView from "../view/waypoint-view";
 
 export default class BoardPresenter {
-  constructor({ boardContainer }) {
+  constructor({
+    boardContainer,
+    destinationModel,
+    offersModel,
+    waypointsModel,
+  }) {
     this.boardContainer = boardContainer;
+    this.destinationData = destinationModel.get();
+    this.offersData = offersModel.get();
+    this.waypointsData = waypointsModel.get();
   }
 
   init() {
@@ -26,8 +34,8 @@ export default class BoardPresenter {
 
     render(new EditingFormView(), tripEventsList);
     render(new CreatingFormView(), tripEventsList);
-    for (let i = 0; i < 3; i++) {
-      render(new WaypointView(), tripEventsList);
-    }
+    this.waypointsData.forEach((waypoint) => {
+      render(new WaypointView(waypoint), tripEventsList);
+    });
   }
 }
