@@ -15,9 +15,9 @@ export default class BoardPresenter {
     waypointsModel,
   }) {
     this.boardContainer = boardContainer;
-    this.destinationData = destinationModel.get();
-    this.offersData = offersModel.get();
-    this.waypointsData = waypointsModel.get();
+    this.destinationModel = destinationModel;
+    this.offersModel = offersModel;
+    this.waypointsModel = waypointsModel;
   }
 
   init() {
@@ -34,8 +34,16 @@ export default class BoardPresenter {
 
     render(new EditingFormView(), tripEventsList);
     render(new CreatingFormView(), tripEventsList);
-    this.waypointsData.forEach((waypoint) => {
-      render(new WaypointView(waypoint), tripEventsList);
+
+    this.waypointsModel.get().forEach((waypoint) => {
+      render(
+        new WaypointView(
+          waypoint,
+          this.destinationModel.getById(waypoint.destination),
+          this.offersModel.getByType(waypoint.type)
+        ),
+        tripEventsList
+      );
     });
   }
 }

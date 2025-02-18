@@ -39,7 +39,7 @@ const EVENTS_TYPES = [
   "flight",
   "bus",
   "train",
-  "restourant",
+  "restaurant",
   "check-in",
   "drive",
   "ship",
