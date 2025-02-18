@@ -18,9 +18,9 @@ const CITIES = [
 ];
 
 const DESCRIPTIONS = [
-  "Амстердам – столица Нидерландов, известная сложной сетью каналов, узкими домами с остроконечными крышами и богатым художественным наследием, в том числе XVII века, ставшего золотым в истории этой страны.",
-  " is the capital and largest city of Germany, by both area and population. With 3.66 million inhabitants, it has the highest population within its city ...",
-  " is one of nine regions of England and the top subdivision covering most of the city metropolis.",
+  "is the capital of the Netherlands, known for its intricate canal network, narrow houses with gabled roofs, and rich artistic heritage, including that of the 17th century, which was the Golden Age in the country's history.",
+  "is the capital and largest city of Germany, by both area and population. With 3.66 million inhabitants, it has the highest population within its city ...",
+  "is one of nine regions of England and the top subdivision covering most of the city metropolis.",
 ];
 
 const OFFERS = [

@@ -32,7 +32,18 @@ export default class BoardPresenter {
     tripEvents.innerHTML += `<ul class="trip-events__list"></ul>`;
     const tripEventsList = tripEvents.querySelector(".trip-events__list");
 
-    render(new EditingFormView(), tripEventsList);
+    const firstWaypoint = this.waypointsModel.get()[0];
+    if (firstWaypoint) {
+      const firstDestination = this.destinationModel.getById(
+        firstWaypoint.destination
+      );
+      const firstOffers = this.offersModel.getByType(firstWaypoint.type);
+      render(
+        new EditingFormView(firstWaypoint, firstDestination, firstOffers),
+        tripEventsList
+      );
+    }
+
     render(new CreatingFormView(), tripEventsList);
 
     this.waypointsModel.get().forEach((waypoint) => {
