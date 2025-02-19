@@ -1,20 +1,19 @@
+import DestinationModel from "./model/destination-model";
+import OffersModel from "./model/offers-model";
+import WaypointsModel from "./model/waypoints-model";
 import BoardPresenter from "./presenter/main-presenter";
+import MockService from "./service/mock-service";
 
 const siteMainElement = document.querySelector(".page-body");
-/*const siteHeaderElement = siteMainElement.querySelector(".trip-main");
-const tripEvents = document.querySelector(".trip-events");
+const mockService = new MockService();
+const destinationModel = new DestinationModel(mockService);
+const offersModel = new OffersModel(mockService);
+const waypointsModel = new WaypointsModel(mockService);
 
-render(new TripInfoView(), siteHeaderElement);
-render(new FiltersView(), siteHeaderElement);
-render(new NewEventButtonView(), siteHeaderElement);
-render(new SortingView(), tripEvents);
-
-tripEvents.innerHTML += `<ul class="trip-events__list"></ul>`;
-const tripEventsList = tripEvents.querySelector(".trip-events__list");
-
-render(new CreatingFormView(), tripEventsList);
-render(new EditingFormView(), tripEventsList);
-render(new WaypointView(), tripEventsList);*/
-
-const boardPresenter = new BoardPresenter({ boardContainer: siteMainElement });
+const boardPresenter = new BoardPresenter({
+  boardContainer: siteMainElement,
+  destinationModel: destinationModel,
+  offersModel: offersModel,
+  waypointsModel: waypointsModel,
+});
 boardPresenter.init();
