@@ -40,25 +40,29 @@ export default class BoardPresenter {
     render(new CreatingFormView(), tripEventsList);
 
     this.#waypointsModel.waypoints.forEach((waypoint) => {
+      this.#renderWaypoint(waypoint, tripEventsList);
+    });
+  }
+
+  #renderWaypoint(waypoint, tripEventsList) {
+    render(
+      new WaypointView(
+        waypoint,
+        this.#destinationModel.getById(waypoint.destination),
+        this.#offersModel.getByType(waypoint.type)
+      ),
+      tripEventsList
+    );
+    // const firstWaypoint = this.#waypointsModel.waypoints[0];
+    if (waypoint) {
+      const firstDestination = this.#destinationModel.getById(
+        waypoint.destination
+      );
+      const firstOffers = this.#offersModel.getByType(waypoint.type);
       render(
-        new WaypointView(
-          waypoint,
-          this.#destinationModel.getById(waypoint.destination),
-          this.#offersModel.getByType(waypoint.type)
-        ),
+        new EditingFormView(waypoint, firstDestination, firstOffers),
         tripEventsList
       );
-      // const firstWaypoint = this.#waypointsModel.waypoints[0];
-      if (waypoint) {
-        const firstDestination = this.#destinationModel.getById(
-          waypoint.destination
-        );
-        const firstOffers = this.#offersModel.getByType(waypoint.type);
-        render(
-          new EditingFormView(waypoint, firstDestination, firstOffers),
-          tripEventsList
-        );
-      }
-    });
+    }
   }
 }

@@ -7,7 +7,7 @@ function createEditingFormTemplate(
   waypointOffers
 ) {
   const { basePrice, dateFrom, dateTo, offers, type } = waypoint;
-  const { description, name } = waypointDestination;
+  const { description, name, pictures } = waypointDestination;
 
   const startDate = dayjs(dateFrom).format('DD/MM/YY HH:mm');
   const endDate = dayjs(dateTo).format('DD/MM/YY HH:mm');
@@ -25,6 +25,12 @@ function createEditingFormTemplate(
         </div>`;
     })
     .join('');
+
+  const picturesTemplate = pictures.length
+    ? pictures
+      .map((pic) => `<img class="event__photo" src="${pic.src}" alt="${pic.description}">`)
+      .join('')
+    : '';
 
   return `
     <li class="trip-events__item">
@@ -86,6 +92,11 @@ function createEditingFormTemplate(
               <section class="event__section event__section--destination">
                 <h3 class="event__section-title event__section-title--destination">Destination</h3>
                 <p class="event__destination-description">${description}</p>
+                <div class="event__photos-container">
+                  <div class="event__photos-tape">
+                    ${picturesTemplate}
+                  </div>
+                </div>
               </section>
               `
     : ''
