@@ -1,21 +1,20 @@
-import dayjs from "dayjs";
-import { createElement } from "../render.js";
+import dayjs from 'dayjs';
+import AbstractView from '../framework/view/abstract-view.js';
 
 function createEditingFormTemplate(
   waypoint,
   waypointDestination,
   waypointOffers
 ) {
-  const { basePrice, dateFrom, dateTo, destination, isFavorite, offers, type } =
-    waypoint;
+  const { basePrice, dateFrom, dateTo, offers, type } = waypoint;
   const { description, name } = waypointDestination;
 
-  const startDate = dayjs(dateFrom).format("DD/MM/YY HH:mm");
-  const endDate = dayjs(dateTo).format("DD/MM/YY HH:mm");
+  const startDate = dayjs(dateFrom).format('DD/MM/YY HH:mm');
+  const endDate = dayjs(dateTo).format('DD/MM/YY HH:mm');
 
   const offersTemplate = waypointOffers
     .map((offer) => {
-      const isChecked = offers.includes(offer.id) ? "checked" : "";
+      const isChecked = offers.includes(offer.id) ? 'checked' : '';
       return `
         <div class="event__offer-selector">
           <input class="event__offer-checkbox visually-hidden" id="event-offer-${offer.id}" type="checkbox" name="event-offer-${offer.id}" ${isChecked}>
@@ -25,7 +24,7 @@ function createEditingFormTemplate(
           </label>
         </div>`;
     })
-    .join("");
+    .join('');
 
   return `
     <li class="trip-events__item">
@@ -71,51 +70,44 @@ function createEditingFormTemplate(
 
         <section class="event__details">
           ${
-            offersTemplate
-              ? `<section class="event__section  event__section--offers">
-            <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-            <div class="event__available-offers">${offersTemplate}</div>
-          </section>`
-              : ""
-          }
+  offersTemplate
+    ? `
+              <section class="event__section event__section--offers">
+                <h3 class="event__section-title event__section-title--offers">Offers</h3>
+                <div class="event__available-offers">${offersTemplate}</div>
+              </section>
+              `
+    : ''
+}
 
           ${
-            description
-              ? `<section class="event__section  event__section--destination">
-            <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-            <p class="event__destination-description">${description}</p>
-          </section>`
-              : ""
-          }
+  description
+    ? `
+              <section class="event__section event__section--destination">
+                <h3 class="event__section-title event__section-title--destination">Destination</h3>
+                <p class="event__destination-description">${description}</p>
+              </section>
+              `
+    : ''
+}
         </section>
       </form>
     </li>`;
 }
 
-export default class EditingFormView {
+export default class EditingFormView extends AbstractView {
   constructor(waypoint, waypointDestination, waypointOffers) {
+    super();
     this.waypoint = waypoint;
     this.waypointDestination = waypointDestination;
     this.waypointOffers = waypointOffers;
   }
 
-  getTemplate() {
+  get template() {
     return createEditingFormTemplate(
       this.waypoint,
       this.waypointDestination,
       this.waypointOffers
     );
-  }
-
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
   }
 }

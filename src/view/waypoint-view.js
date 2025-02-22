@@ -1,16 +1,16 @@
-import dayjs from "dayjs";
-import { createElement } from "../render.js";
+import dayjs from 'dayjs';
+import AbstractView from '../framework/view/abstract-view.js';
 
 function createWaypointTemplate(waypoint, waypointDestination, waypointOffers) {
   const { basePrice, dateFrom, dateTo, isFavorite, offers, type } = waypoint;
   const { name } = waypointDestination;
 
-  const eventDate = dayjs(dateFrom).format("MMM D");
-  const startTime = dayjs(dateFrom).format("HH:mm");
-  const endTime = dayjs(dateTo).format("HH:mm");
-  const duration = dayjs(dateTo).diff(dayjs(dateFrom), "minute");
+  const eventDate = dayjs(dateFrom).format('MMM D');
+  const startTime = dayjs(dateFrom).format('HH:mm');
+  const endTime = dayjs(dateTo).format('HH:mm');
+  const duration = dayjs(dateTo).diff(dayjs(dateFrom), 'minute');
 
-  const favoriteClass = isFavorite ? "event__favorite-btn--active" : "";
+  const favoriteClass = isFavorite ? 'event__favorite-btn--active' : '';
 
   const offersList = waypointOffers
     .filter((offer) => offers.includes(offer.id))
@@ -21,7 +21,7 @@ function createWaypointTemplate(waypoint, waypointDestination, waypointOffers) {
         &plus;&euro;&nbsp;<span class="event__offer-price">${offer.price}</span>
       </li>`
     )
-    .join("");
+    .join('');
 
   return `
     <li class="trip-events__item">
@@ -58,29 +58,19 @@ function createWaypointTemplate(waypoint, waypointDestination, waypointOffers) {
   `;
 }
 
-export default class WaypointView {
+export default class WaypointView extends AbstractView {
   constructor(waypoint, waypointDestination, waypointOffers) {
+    super();
     this.waypoint = waypoint;
     this.waypointDestination = waypointDestination;
     this.waypointOffers = waypointOffers;
   }
 
-  getTemplate() {
+  get template() {
     return createWaypointTemplate(
       this.waypoint,
       this.waypointDestination,
       this.waypointOffers
     );
-  }
-
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
   }
 }
