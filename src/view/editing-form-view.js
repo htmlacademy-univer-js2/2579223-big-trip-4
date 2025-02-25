@@ -107,18 +107,40 @@ function createEditingFormTemplate(
 }
 
 export default class EditingFormView extends AbstractView {
-  constructor(waypoint, waypointDestination, waypointOffers) {
+  #waypoint = null;
+  #waypointDestination = null;
+  #waypointOffers = null;
+  #onResetClick = null;
+  #onSubmitClick = null;
+
+  constructor(waypoint, waypointDestination, waypointOffers, onResetClick, onSubmitClick) {
     super();
-    this.waypoint = waypoint;
-    this.waypointDestination = waypointDestination;
-    this.waypointOffers = waypointOffers;
+    this.#waypoint = waypoint;
+    this.#waypointDestination = waypointDestination;
+    this.#waypointOffers = waypointOffers;
+    this.#onResetClick = onResetClick;
+    this.#onSubmitClick = onSubmitClick;
+
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#resetButtonClickHandler);
+
+    this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
   }
 
   get template() {
     return createEditingFormTemplate(
-      this.waypoint,
-      this.waypointDestination,
-      this.waypointOffers
+      this.#waypoint,
+      this.#waypointDestination,
+      this.#waypointOffers
     );
   }
+
+  #resetButtonClickHandler = (evt) => {
+    evt.preventDefault();
+    this.#onResetClick();
+  };
+
+  #formSubmitHandler = (evt) => {
+    evt.preventDefault();
+    this.#onSubmitClick();
+  };
 }

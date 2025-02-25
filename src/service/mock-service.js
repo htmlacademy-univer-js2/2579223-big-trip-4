@@ -10,9 +10,9 @@ import { generateWaypoint } from '../mock/waypoints';
 import { getRandomArrayElement, getRandomInteger } from '../utils';
 
 export default class MockService {
-  #destinations;
-  #offers;
-  #waypoints;
+  #destinations = null;
+  #offers = null;
+  #waypoints = null;
 
   constructor() {
     this.#destinations = this.generateDestinations();

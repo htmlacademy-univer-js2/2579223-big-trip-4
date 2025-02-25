@@ -59,18 +59,31 @@ function createWaypointTemplate(waypoint, waypointDestination, waypointOffers) {
 }
 
 export default class WaypointView extends AbstractView {
-  constructor(waypoint, waypointDestination, waypointOffers) {
+  #waypoint = null;
+  #waypointDestination = null;
+  #waypointOffers = null;
+  #onEditClick = null;
+
+  constructor(waypoint, waypointDestination, waypointOffers, onEditClick) {
     super();
-    this.waypoint = waypoint;
-    this.waypointDestination = waypointDestination;
-    this.waypointOffers = waypointOffers;
+    this.#waypoint = waypoint;
+    this.#waypointDestination = waypointDestination;
+    this.#waypointOffers = waypointOffers;
+    this.#onEditClick = onEditClick;
+
+    this. element.querySelector('.event__rollup-btn').addEventListener('click', this.#onEditClickHandler);
   }
 
   get template() {
     return createWaypointTemplate(
-      this.waypoint,
-      this.waypointDestination,
-      this.waypointOffers
+      this.#waypoint,
+      this.#waypointDestination,
+      this.#waypointOffers
     );
   }
+
+  #onEditClickHandler = (evt) => {
+    evt.preventDefault();
+    this.#onEditClick();
+  };
 }

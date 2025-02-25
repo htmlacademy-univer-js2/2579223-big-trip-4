@@ -1,6 +1,6 @@
 export default class WaypointsModel {
-  #service;
-  #waypoints;
+  #service = null;
+  #waypoints = null;
 
   constructor(service) {
     this.#service = service;
