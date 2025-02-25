@@ -3,33 +3,33 @@ import {
   EVENTS_TYPES,
   OFFERS_COUNT,
   WAYPOINTS_COUNT,
-} from "../mock/const";
-import { generateDestination } from "../mock/destination";
-import { generateOffer } from "../mock/offer";
-import { generateWaypoint } from "../mock/waypoints";
-import { getRandomArrayElement, getRandomInteger } from "../utils";
+} from '../mock/const';
+import { generateDestination } from '../mock/destination';
+import { generateOffer } from '../mock/offer';
+import { generateWaypoint } from '../mock/waypoints';
+import { getRandomArrayElement, getRandomInteger } from '../utils';
 
 export default class MockService {
-  destinations = [];
-  offers = [];
-  waypoints = [];
+  #destinations = null;
+  #offers = null;
+  #waypoints = null;
 
   constructor() {
-    this.destinations = this.generateDestinations();
-    this.offers = this.generateOffers();
-    this.waypoints = this.generateWaypoints();
+    this.#destinations = this.generateDestinations();
+    this.#offers = this.generateOffers();
+    this.#waypoints = this.generateWaypoints();
   }
 
-  getDestinations() {
-    return this.destinations;
+  get destinations() {
+    return this.#destinations;
   }
 
-  getOffers() {
-    return this.offers;
+  get offers() {
+    return this.#offers;
   }
 
-  getWaypoints() {
-    return this.waypoints;
+  get waypoints() {
+    return this.#waypoints;
   }
 
   generateOffers() {
@@ -53,14 +53,14 @@ export default class MockService {
       const destination = getRandomArrayElement(this.destinations);
       const hasOffers = getRandomInteger(0, 1);
 
-      const offersByType = this.offers.find(
+      const offersByType = this.#offers.find(
         (offerByType) => offerByType.type === type
       );
 
       const offerIds = hasOffers
         ? offersByType.offers
-            .slice(0, getRandomInteger(1, OFFERS_COUNT))
-            .map((offer) => offer.id)
+          .slice(0, getRandomInteger(1, OFFERS_COUNT))
+          .map((offer) => offer.id)
         : [];
 
       return generateWaypoint(type, destination.id, offerIds);

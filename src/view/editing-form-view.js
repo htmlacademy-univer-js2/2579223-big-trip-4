@@ -1,21 +1,20 @@
-import dayjs from "dayjs";
-import { createElement } from "../render.js";
+import dayjs from 'dayjs';
+import AbstractView from '../framework/view/abstract-view.js';
 
 function createEditingFormTemplate(
   waypoint,
   waypointDestination,
   waypointOffers
 ) {
-  const { basePrice, dateFrom, dateTo, destination, isFavorite, offers, type } =
-    waypoint;
-  const { description, name } = waypointDestination;
+  const { basePrice, dateFrom, dateTo, offers, type } = waypoint;
+  const { description, name, pictures } = waypointDestination;
 
-  const startDate = dayjs(dateFrom).format("DD/MM/YY HH:mm");
-  const endDate = dayjs(dateTo).format("DD/MM/YY HH:mm");
+  const startDate = dayjs(dateFrom).format('DD/MM/YY HH:mm');
+  const endDate = dayjs(dateTo).format('DD/MM/YY HH:mm');
 
   const offersTemplate = waypointOffers
     .map((offer) => {
-      const isChecked = offers.includes(offer.id) ? "checked" : "";
+      const isChecked = offers.includes(offer.id) ? 'checked' : '';
       return `
         <div class="event__offer-selector">
           <input class="event__offer-checkbox visually-hidden" id="event-offer-${offer.id}" type="checkbox" name="event-offer-${offer.id}" ${isChecked}>
@@ -25,7 +24,13 @@ function createEditingFormTemplate(
           </label>
         </div>`;
     })
-    .join("");
+    .join('');
+
+  const picturesTemplate = pictures.length
+    ? pictures
+      .map((pic) => `<img class="event__photo" src="${pic.src}" alt="${pic.description}">`)
+      .join('')
+    : '';
 
   return `
     <li class="trip-events__item">
@@ -71,51 +76,71 @@ function createEditingFormTemplate(
 
         <section class="event__details">
           ${
-            offersTemplate
-              ? `<section class="event__section  event__section--offers">
-            <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-            <div class="event__available-offers">${offersTemplate}</div>
-          </section>`
-              : ""
-          }
+  offersTemplate
+    ? `
+              <section class="event__section event__section--offers">
+                <h3 class="event__section-title event__section-title--offers">Offers</h3>
+                <div class="event__available-offers">${offersTemplate}</div>
+              </section>
+              `
+    : ''
+}
 
           ${
-            description
-              ? `<section class="event__section  event__section--destination">
-            <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-            <p class="event__destination-description">${description}</p>
-          </section>`
-              : ""
-          }
+  description
+    ? `
+              <section class="event__section event__section--destination">
+                <h3 class="event__section-title event__section-title--destination">Destination</h3>
+                <p class="event__destination-description">${description}</p>
+                <div class="event__photos-container">
+                  <div class="event__photos-tape">
+                    ${picturesTemplate}
+                  </div>
+                </div>
+              </section>
+              `
+    : ''
+}
         </section>
       </form>
     </li>`;
 }
 
-export default class EditingFormView {
-  constructor(waypoint, waypointDestination, waypointOffers) {
-    this.waypoint = waypoint;
-    this.waypointDestination = waypointDestination;
-    this.waypointOffers = waypointOffers;
+export default class EditingFormView extends AbstractView {
+  #waypoint = null;
+  #waypointDestination = null;
+  #waypointOffers = null;
+  #onResetClick = null;
+  #onSubmitClick = null;
+
+  constructor(waypoint, waypointDestination, waypointOffers, onResetClick, onSubmitClick) {
+    super();
+    this.#waypoint = waypoint;
+    this.#waypointDestination = waypointDestination;
+    this.#waypointOffers = waypointOffers;
+    this.#onResetClick = onResetClick;
+    this.#onSubmitClick = onSubmitClick;
+
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#resetButtonClickHandler);
+
+    this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
   }
 
-  getTemplate() {
+  get template() {
     return createEditingFormTemplate(
-      this.waypoint,
-      this.waypointDestination,
-      this.waypointOffers
+      this.#waypoint,
+      this.#waypointDestination,
+      this.#waypointOffers
     );
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
+  #resetButtonClickHandler = (evt) => {
+    evt.preventDefault();
+    this.#onResetClick();
+  };
 
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
-  }
+  #formSubmitHandler = (evt) => {
+    evt.preventDefault();
+    this.#onSubmitClick();
+  };
 }
