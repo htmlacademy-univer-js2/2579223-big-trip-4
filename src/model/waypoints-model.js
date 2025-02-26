@@ -10,4 +10,8 @@ export default class WaypointsModel {
   get waypoints() {
     return this.#waypoints;
   }
+
+  updateWaypoint(updatedWaypoint) {
+    return this.#waypoints.map((waypoint) => waypoint.id === updatedWaypoint.id ? updatedWaypoint : waypoint);
+  }
 }

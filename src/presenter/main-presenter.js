@@ -14,13 +14,9 @@ export default class BoardPresenter {
   #headerElement = null;
   #tripEvents = null;
   #tripEventsList = null;
+  #waypointPresenters = new Map();
 
-  constructor({
-    boardContainer,
-    destinationModel,
-    offersModel,
-    waypointsModel,
-  }) {
+  constructor({ boardContainer, destinationModel, offersModel, waypointsModel }) {
     this.#boardContainer = boardContainer;
     this.#destinationModel = destinationModel;
     this.#offersModel = offersModel;
@@ -41,14 +37,27 @@ export default class BoardPresenter {
 
     render(new CreatingFormView(), this.#tripEventsList);
 
-    this.#waypointsModel.waypoints.forEach((waypoint) => {
-      const waypointPresenter = new WaypointPresenter (
-        waypoint,
-        this.#tripEventsList,
-        this.#destinationModel,
-        this.#offersModel
-      );
-      waypointPresenter.init();
-    });
+    this.#waypointsModel.waypoints.forEach((waypoint) => this.#renderWaypoint(waypoint));
   }
+
+  #renderWaypoint(waypoint) {
+    const waypointPresenter = new WaypointPresenter(
+      waypoint,
+      this.#tripEventsList,
+      this.#destinationModel,
+      this.#offersModel,
+      this.#handleWaypointChange
+    );
+
+    this.#waypointPresenters.set(waypoint.id, waypointPresenter);
+    waypointPresenter.init();
+  }
+
+  #handleWaypointChange = (updatedWaypoint) => {
+    this.#waypointsModel.updateWaypoint(updatedWaypoint);
+    const waypointPresenter = this.#waypointPresenters.get(updatedWaypoint.id);
+    if (waypointPresenter) {
+      waypointPresenter.update(updatedWaypoint);
+    }
+  };
 }
