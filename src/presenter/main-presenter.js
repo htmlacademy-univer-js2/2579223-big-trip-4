@@ -46,7 +46,8 @@ export default class BoardPresenter {
       this.#tripEventsList,
       this.#destinationModel,
       this.#offersModel,
-      this.#handleWaypointChange
+      this.#handleWaypointChange,
+      this.#handleModeChange
     );
 
     this.#waypointPresenters.set(waypoint.id, waypointPresenter);
@@ -59,5 +60,9 @@ export default class BoardPresenter {
     if (waypointPresenter) {
       waypointPresenter.update(updatedWaypoint);
     }
+  };
+
+  #handleModeChange = () => {
+    this.#waypointPresenters.forEach((waypointPresenter) => waypointPresenter.resetView());
   };
 }

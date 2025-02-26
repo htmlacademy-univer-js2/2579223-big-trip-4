@@ -1,6 +1,11 @@
-import { render, replace } from '../framework/render';
+import { render, replace, remove } from '../framework/render';
 import EditingFormView from '../view/editing-form-view';
 import WaypointView from '../view/waypoint-view';
+
+const Mode = {
+  DEFAULT: 'DEFAULT',
+  EDITING: 'EDITING'
+};
 
 export default class WaypointPresenter {
   #waypointsContainer = null;
@@ -10,21 +15,27 @@ export default class WaypointPresenter {
   #waypointComponent = null;
   #editWaypointComponent = null;
   #onDataChange = null;
+  #onModeChange = null;
+  #mode = Mode.DEFAULT;
 
-  constructor(waypoint, waypointContainer, destinationsModel, offersModel, onDataChange) {
+  constructor(waypoint, waypointContainer, destinationsModel, offersModel, onDataChange, onModeChange) {
     this.#waypoint = waypoint;
     this.#waypointsContainer = waypointContainer;
     this.#destinationsModel = destinationsModel;
     this.#offersModel = offersModel;
     this.#onDataChange = onDataChange;
+    this.#onModeChange = onModeChange;
   }
 
   #replaceWaypointToForm() {
     replace(this.#editWaypointComponent, this.#waypointComponent);
+    this.#onModeChange();
+    this.#mode = Mode.EDITING;
   }
 
   #replaceFormToWaypoint() {
     replace(this.#waypointComponent, this.#editWaypointComponent);
+    this.#mode = Mode.DEFAULT;
   }
 
   #escKeydownHandler = (evt) => {
@@ -59,6 +70,9 @@ export default class WaypointPresenter {
   };
 
   init() {
+    const prevWaypointComponent = this.#waypointComponent;
+    const prevWaypointEditComponent = this.#editWaypointComponent;
+
     this.#waypointComponent = new WaypointView(
       this.#waypoint,
       this.#destinationsModel.getById(this.#waypoint.destination),
@@ -75,7 +89,21 @@ export default class WaypointPresenter {
       this.#waypointSubmitHandler
     );
 
-    render(this.#waypointComponent, this.#waypointsContainer);
+    if (prevWaypointComponent === null || prevWaypointEditComponent === null) {
+      render(this.#waypointComponent, this.#waypointsContainer);
+      return;
+    }
+
+    if (this.#mode === Mode.DEFAULT) {
+      replace(this.#waypointComponent, prevWaypointComponent);
+    }
+
+    if (this.#mode === Mode.EDITING) {
+      replace(this.#editWaypointComponent, prevWaypointEditComponent);
+    }
+
+    remove(prevWaypointComponent);
+    remove(prevWaypointEditComponent);
   }
 
   update(updatedWaypoint) {
@@ -90,5 +118,16 @@ export default class WaypointPresenter {
 
     replace(newWaypointComponent, this.#waypointComponent);
     this.#waypointComponent = newWaypointComponent;
+  }
+
+  destroy() {
+    remove(this.#waypointComponent);
+    remove(this.#editWaypointComponent);
+  }
+
+  resetView() {
+    if (this.#mode !== Mode.DEFAULT) {
+      this.#replaceFormToWaypoint();
+    }
   }
 }
