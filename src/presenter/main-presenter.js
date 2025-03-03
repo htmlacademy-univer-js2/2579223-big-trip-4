@@ -1,11 +1,10 @@
-import { render, replace } from '../framework/render';
+import { render } from '../framework/render';
 import CreatingFormView from '../view/create-form-view';
-import EditingFormView from '../view/editing-form-view';
 import FiltersView from '../view/filters-view';
 import NewEventButtonView from '../view/new-event-button-view';
 import SortingView from '../view/sorting-view';
 import TripInfoView from '../view/trip-info-view';
-import WaypointView from '../view/waypoint-view';
+import WaypointPresenter from './waypoint-presenter';
 
 export default class BoardPresenter {
   #boardContainer = null;
@@ -15,13 +14,9 @@ export default class BoardPresenter {
   #headerElement = null;
   #tripEvents = null;
   #tripEventsList = null;
+  #waypointPresenters = new Map();
 
-  constructor({
-    boardContainer,
-    destinationModel,
-    offersModel,
-    waypointsModel,
-  }) {
+  constructor({ boardContainer, destinationModel, offersModel, waypointsModel }) {
     this.#boardContainer = boardContainer;
     this.#destinationModel = destinationModel;
     this.#offersModel = offersModel;
@@ -42,58 +37,32 @@ export default class BoardPresenter {
 
     render(new CreatingFormView(), this.#tripEventsList);
 
-    this.#waypointsModel.waypoints.forEach((waypoint) => {
-      this.#renderWaypoint(waypoint, this.#tripEventsList);
-    });
+    this.#waypointsModel.waypoints.forEach((waypoint) => this.#renderWaypoint(waypoint));
   }
 
-  #renderWaypoint(waypoint, tripEventsList) {
-    const waypointComponent = new WaypointView(
+  #renderWaypoint(waypoint) {
+    const waypointPresenter = new WaypointPresenter(
       waypoint,
-      this.#destinationModel.getById(waypoint.destination),
-      this.#offersModel.getByType(waypoint.type),
-      waypointEditClickHandler
+      this.#tripEventsList,
+      this.#destinationModel,
+      this.#offersModel,
+      this.#handleWaypointChange,
+      this.#handleModeChange
     );
 
-    const editWaypointComponent = new EditingFormView(
-      waypoint,
-      this.#destinationModel.getById(waypoint.destination),
-      this.#offersModel.getByType(waypoint.type),
-      resetButtonClickHandler,
-      waypointSubmitHandler
-    );
-
-    const replaceWaypointToForm = () => {
-      replace(editWaypointComponent, waypointComponent);
-    };
-
-    const replaceFormToWaypoint = () => {
-      replace(waypointComponent, editWaypointComponent);
-    };
-
-    const escKeydownHandler = (evt) => {
-      if(evt.key === 'Escape' || evt.key === 'Esc') {
-        evt.preventDefault();
-        replaceFormToWaypoint();
-        document.removeEventListener('keydown', escKeydownHandler);
-      }
-    };
-
-    function waypointEditClickHandler() {
-      replaceWaypointToForm();
-      document.addEventListener('keydown', escKeydownHandler);
-    }
-
-    function resetButtonClickHandler() {
-      replaceFormToWaypoint();
-      document.removeEventListener('keydown', escKeydownHandler);
-    }
-
-    function waypointSubmitHandler() {
-      replaceFormToWaypoint();
-      document.removeEventListener('keydown', escKeydownHandler);
-    }
-
-    render(waypointComponent, tripEventsList);
+    this.#waypointPresenters.set(waypoint.id, waypointPresenter);
+    waypointPresenter.init();
   }
+
+  #handleWaypointChange = (updatedWaypoint) => {
+    this.#waypointsModel.updateWaypoint(updatedWaypoint);
+    const waypointPresenter = this.#waypointPresenters.get(updatedWaypoint.id);
+    if (waypointPresenter) {
+      waypointPresenter.update(updatedWaypoint);
+    }
+  };
+
+  #handleModeChange = () => {
+    this.#waypointPresenters.forEach((waypointPresenter) => waypointPresenter.resetView());
+  };
 }
