@@ -34,7 +34,9 @@ export default class WaypointPresenter {
   }
 
   #replaceFormToWaypoint() {
-    replace(this.#waypointComponent, this.#editWaypointComponent);
+    if (this.#editWaypointComponent.element.parentElement) {
+      replace(this.#waypointComponent, this.#editWaypointComponent);
+    }
     this.#mode = Mode.DEFAULT;
   }
 
