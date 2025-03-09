@@ -536,6 +536,8 @@ main {
     background-image: url("../img/icons/sightseeing.png"); }
   .event__type-label--restaurant::before {
     background-image: url("../img/icons/restaurant.png"); }
+  .event__type-label--transport::before {
+    background-image: url("../img/icons/transport.png"); }
   .event__type-label:hover {
     color: #ffd054; }
 
