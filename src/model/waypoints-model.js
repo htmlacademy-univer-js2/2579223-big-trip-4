@@ -1,8 +1,12 @@
-export default class WaypointsModel {
+import { updateItem } from '../utils';
+import Observable from '../framework/observable';
+
+export default class WaypointsModel extends Observable {
   #service = null;
   #waypoints = null;
 
   constructor(service) {
+    super();
     this.#service = service;
     this.#waypoints = this.#service.waypoints;
   }
@@ -11,7 +15,29 @@ export default class WaypointsModel {
     return this.#waypoints;
   }
 
+  getById(id) {
+    return this.#waypoints.find((waypoint) => waypoint.id === id);
+  }
+
   updateWaypoint(updatedWaypoint) {
     return this.#waypoints.map((waypoint) => waypoint.id === updatedWaypoint.id ? updatedWaypoint : waypoint);
+  }
+
+  update(updateType, waypoint) {
+    const updatedWaypoint = this.#service.updateWaypoint(waypoint);
+    this.#waypoints = updateItem(this.#waypoints, updatedWaypoint);
+    this._notify(updateType, updatedWaypoint);
+  }
+
+  add(updateType, waypoint) {
+    const addedWaypoint = this.#service.addWaypoint(waypoint);
+    this.#waypoints.push(addedWaypoint);
+    this._notify(updateType, addedWaypoint);
+  }
+
+  delete(updateType, waypoint) {
+    this.#service.deleteWaypoint(waypoint);
+    this.#waypoints = this.#waypoints.filter((waypointItem) => waypointItem.id !== waypoint.id);
+    this._notify(updateType);
   }
 }

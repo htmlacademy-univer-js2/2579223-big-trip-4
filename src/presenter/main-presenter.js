@@ -26,6 +26,10 @@ export default class BoardPresenter {
     this.#tripEventsList = null;
   }
 
+  get waypoints() {
+    return this.#waypointsModel.waypoints;
+  }
+
   init() {
     render(new TripInfoView(), this.#headerElement);
     render(new FiltersView(), this.#headerElement);

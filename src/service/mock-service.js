@@ -66,4 +66,18 @@ export default class MockService {
       return generateWaypoint(type, destination.id, offerIds);
     });
   }
+
+  updateWaypoint(updatedWaypoint) {
+    return updatedWaypoint;
+    // to do
+  }
+
+  addWaypoint(data) {
+    return {...data, id: crypto.randomUUID()};
+    // to do
+  }
+
+  deleteWaypoint() {
+    // to do
+  }
 }
