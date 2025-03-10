@@ -1,5 +1,5 @@
 import { render } from '../framework/render';
-import CreatingFormView from '../view/create-form-view';
+// import CreatingFormView from '../view/create-form-view';
 import FiltersView from '../view/filters-view';
 import NewEventButtonView from '../view/new-event-button-view';
 import SortingView from '../view/sorting-view';
@@ -35,7 +35,7 @@ export default class BoardPresenter {
     this.#tripEvents.innerHTML += '<ul class="trip-events__list"></ul>';
     this.#tripEventsList = this.#tripEvents.querySelector('.trip-events__list');
 
-    render(new CreatingFormView(), this.#tripEventsList);
+    // render(new CreatingFormView(), this.#tripEventsList);
 
     this.#waypointsModel.waypoints.forEach((waypoint) => this.#renderWaypoint(waypoint));
   }

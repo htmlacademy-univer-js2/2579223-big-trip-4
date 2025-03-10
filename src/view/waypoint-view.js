@@ -1,5 +1,7 @@
 import dayjs from 'dayjs';
+import duration from 'dayjs/plugin/duration';
 import AbstractView from '../framework/view/abstract-view.js';
+dayjs.extend(duration);
 
 function createWaypointTemplate(waypoint, waypointDestination, waypointOffers) {
   const { basePrice, dateFrom, dateTo, isFavorite, offers, type } = waypoint;
@@ -8,7 +10,18 @@ function createWaypointTemplate(waypoint, waypointDestination, waypointOffers) {
   const eventDate = dayjs(dateFrom).format('MMM D');
   const startTime = dayjs(dateFrom).format('HH:mm');
   const endTime = dayjs(dateTo).format('HH:mm');
-  const duration = dayjs(dateTo).diff(dayjs(dateFrom), 'minute');
+
+  const diffMs = dayjs(dateTo).diff(dayjs(dateFrom));
+  const durationTime = dayjs.duration(diffMs);
+  let formattedDuration = '';
+
+  if (durationTime.days() > 0) {
+    formattedDuration = `${durationTime.days()}D ${durationTime.hours()}H ${durationTime.minutes()}M`;
+  } else if (durationTime.hours() > 0) {
+    formattedDuration = `${durationTime.hours()}H ${durationTime.minutes()}M`;
+  } else {
+    formattedDuration = `${durationTime.minutes()}M`;
+  }
 
   const favoriteClass = isFavorite ? 'event__favorite-btn--active' : '';
 
@@ -37,7 +50,7 @@ function createWaypointTemplate(waypoint, waypointDestination, waypointOffers) {
             &mdash;
             <time class="event__end-time" datetime="${dateTo}">${endTime}</time>
           </p>
-          <p class="event__duration">${duration}M</p>
+          <p class="event__duration">${formattedDuration}</p>
         </div>
         <p class="event__price">
           &euro;&nbsp;<span class="event__price-value">${basePrice}</span>
@@ -73,7 +86,7 @@ export default class WaypointView extends AbstractView {
     this.#onEditClick = onEditClick;
     this.#onFavoriteClick = onFavoriteClick;
 
-    this. element.querySelector('.event__rollup-btn').addEventListener('click', this.#onEditClickHandler);
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#onEditClickHandler);
     this.element.querySelector('.event__favorite-btn').addEventListener('click', this.#onFavoriteClickHandler);
   }
 

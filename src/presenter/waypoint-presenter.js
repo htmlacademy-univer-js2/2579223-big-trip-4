@@ -18,7 +18,7 @@ export default class WaypointPresenter {
   #onModeChange = null;
   #mode = Mode.DEFAULT;
 
-  constructor(waypoint, waypointContainer, destinationsModel, offersModel, onDataChange, onModeChange) {
+  constructor(waypoint, waypointContainer, destinationsModel, offersModel, onDataChange, onModeChange){
     this.#waypoint = waypoint;
     this.#waypointsContainer = waypointContainer;
     this.#destinationsModel = destinationsModel;
@@ -34,7 +34,9 @@ export default class WaypointPresenter {
   }
 
   #replaceFormToWaypoint() {
-    replace(this.#waypointComponent, this.#editWaypointComponent);
+    if (this.#editWaypointComponent.element.parentElement) {
+      replace(this.#waypointComponent, this.#editWaypointComponent);
+    }
     this.#mode = Mode.DEFAULT;
   }
 
@@ -86,7 +88,9 @@ export default class WaypointPresenter {
       this.#destinationsModel.getById(this.#waypoint.destination),
       this.#offersModel.getByType(this.#waypoint.type),
       this.#resetButtonClickHandler,
-      this.#waypointSubmitHandler
+      this.#waypointSubmitHandler,
+      this.#destinationsModel.destinations,
+      this.#offersModel
     );
 
     if (prevWaypointComponent === null || prevWaypointEditComponent === null) {
