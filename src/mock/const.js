@@ -11,10 +11,10 @@ const UserAction = {
 };
 
 const FilterType = {
-  EVERYTHING: 'EVERYTHING',
-  FUTURE: 'FUTURE',
-  PRESENT: 'PRESENT',
-  PAST: 'PAST',
+  EVERYTHING: 'everything',
+  FUTURE: 'future',
+  PRESENT: 'present',
+  PAST: 'past',
 };
 
 const CITIES = [

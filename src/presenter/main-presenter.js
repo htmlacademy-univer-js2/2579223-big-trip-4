@@ -32,7 +32,12 @@ export default class BoardPresenter {
   get waypoints() {
     const filterType = this.#filtersModel.filter;
     const waypoints = this.#waypointsModel.getWaypoints();
-    return filterWaypoints[filterType](waypoints);
+    if (filterWaypoints[filterType]) {
+      return filterWaypoints[filterType](waypoints);
+    } else {
+      console.error(`Ошибка: фильтр "${filterType}" не найден.`);
+      return waypoints;
+    }
   }
 
   init() {
