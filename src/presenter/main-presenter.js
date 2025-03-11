@@ -5,7 +5,7 @@ import NewEventButtonView from '../view/new-event-button-view';
 import SortingView from '../view/sorting-view';
 import TripInfoView from '../view/trip-info-view';
 import WaypointPresenter from './waypoint-presenter';
-// import { UpdateType } from '../mock/const';
+import { UpdateType } from '../mock/const';
 
 export default class BoardPresenter {
   #boardContainer = null;
@@ -43,6 +43,8 @@ export default class BoardPresenter {
     // render(new CreatingFormView(), this.#tripEventsList);
 
     this.#waypointsModel.getWaypoints().forEach((waypoint) => this.#renderWaypoint(waypoint));
+
+    this.#waypointsModel.addObserver(this.#modelEventHandler);
   }
 
   #renderWaypoint(waypoint) {
@@ -56,29 +58,38 @@ export default class BoardPresenter {
     );
 
     this.#waypointPresenters.set(waypoint.id, waypointPresenter);
-    waypointPresenter.init();
+    waypointPresenter.init(waypoint);
   }
 
-  #handleWaypointChange = (updatedWaypoint) => {
-    this.#waypointsModel.updateWaypoint(updatedWaypoint);
-    const waypointPresenter = this.#waypointPresenters.get(updatedWaypoint.id);
-    if (waypointPresenter) {
-      waypointPresenter.update(updatedWaypoint);
-    }
+  #handleWaypointChange = (updateType, updatedWaypoint) => {
+    this.#waypointsModel.update(updateType, updatedWaypoint);
   };
 
   #handleModeChange = () => {
     this.#waypointPresenters.forEach((waypointPresenter) => waypointPresenter.resetView());
   };
 
-  /*#modelEventHandler = (updateType, data) => {
+  #clearBoard = () => {
+    this.#waypointPresenters.forEach((presenter) => presenter.destroy());
+    this.#waypointPresenters.clear();
+    this.#tripEventsList.innerHTML = '';
+  };
+
+  #rerenderBoard = () => {
+    this.#tripEvents.innerHTML += '<ul class="trip-events__list"></ul>';
+    this.#tripEventsList = this.#tripEvents.querySelector('.trip-events__list');
+    this.waypoints.forEach((waypoint) => this.#renderWaypoint(waypoint));
+  };
+
+  #modelEventHandler = (updateType, data) => {
     switch (updateType) {
       case UpdateType.PATCH:
         this.#waypointPresenters?.get(data.id)?.init(data);
         break;
       case UpdateType.MINOR:
         this.#clearBoard();
-        this.#renderBoard();
+        this.#rerenderBoard();
+        break;
     }
-  };*/
+  };
 }

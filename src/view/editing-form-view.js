@@ -243,7 +243,17 @@ export default class EditingFormView extends AbstractStatefulView {
 
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
-    this.#onSubmitClick();
+    const updatedWaypoint = {
+      ...this._state.waypoint,
+      basePrice: Number(this.element.querySelector('.event__input--price').value),
+      offers: Array.from(this.element.querySelectorAll('.event__offer-checkbox:checked'))
+        .map((checkbox) => Number(checkbox.id.replace('event-offer-', ''))),
+      destination: this._state.waypointDestination.id,
+      dateFrom: this._state.waypoint.dateFrom,
+      dateTo: this._state.waypoint.dateTo,
+    };
+
+    this.#onSubmitClick(updatedWaypoint);
   };
 
   #setDatePickers() {

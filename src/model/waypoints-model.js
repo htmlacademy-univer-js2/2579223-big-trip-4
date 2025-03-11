@@ -30,6 +30,7 @@ export default class WaypointsModel extends Observable {
     this._notify(updateType, updatedWaypoint);
   }
 
+
   add(updateType, waypoint) {
     const addedWaypoint = this.#service.addWaypoint(waypoint);
     this.#waypoints.push(addedWaypoint);
