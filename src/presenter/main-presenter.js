@@ -1,10 +1,10 @@
 import { render } from '../framework/render';
 // import CreatingFormView from '../view/create-form-view';
-// import NewEventButtonView from '../view/new-event-button-view';
 import SortingView from '../view/sorting-view';
 import TripInfoView from '../view/trip-info-view';
 import WaypointPresenter from './waypoint-presenter';
 import { UpdateType } from '../mock/const';
+import { filterWaypoints } from '../utils';
 
 export default class BoardPresenter {
   #boardContainer = null;
@@ -15,24 +15,28 @@ export default class BoardPresenter {
   #tripEvents = null;
   #tripEventsList = null;
   #waypointPresenters = new Map();
+  #filtersModel = null;
 
-  constructor({ boardContainer, destinationModel, offersModel, waypointsModel }) {
+  constructor({ boardContainer, destinationModel, offersModel, waypointsModel, filtersModel }) {
     this.#boardContainer = boardContainer;
     this.#destinationModel = destinationModel;
     this.#offersModel = offersModel;
     this.#waypointsModel = waypointsModel;
+    this.#filtersModel = filtersModel;
+
     this.#headerElement = this.#boardContainer.querySelector('.trip-main');
     this.#tripEvents = this.#boardContainer.querySelector('.trip-events');
     this.#tripEventsList = null;
   }
 
   get waypoints() {
-    return this.#waypointsModel.getWaypoints();
+    const filterType = this.#filtersModel.filter;
+    const waypoints = this.#waypointsModel.getWaypoints();
+    return filterWaypoints[filterType](waypoints);
   }
 
   init() {
     render(new TripInfoView(), this.#headerElement);
-    // render(new NewEventButtonView(), this.#headerElement);
     render(new SortingView(), this.#tripEvents);
 
     this.#tripEvents.innerHTML += '<ul class="trip-events__list"></ul>';
@@ -43,6 +47,7 @@ export default class BoardPresenter {
     this.#waypointsModel.getWaypoints().forEach((waypoint) => this.#renderWaypoint(waypoint));
 
     this.#waypointsModel.addObserver(this.#modelEventHandler);
+    this.#filtersModel.addObserver(this.#modelEventHandler);
   }
 
   #renderWaypoint(waypoint) {
@@ -85,6 +90,7 @@ export default class BoardPresenter {
         this.#waypointPresenters?.get(data.id)?.init(data);
         break;
       case UpdateType.MINOR:
+      case UpdateType.MAJOR:
         this.#clearBoard();
         this.#rerenderBoard();
         break;
