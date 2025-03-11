@@ -9,7 +9,6 @@ export default class FiltersPresenter {
   constructor({ boardContainer, filtersModel }) {
     this.#boardContainer = boardContainer;
     this.#filtersModel = filtersModel;
-    console.log(this.#filtersModel);
   }
 
   init() {

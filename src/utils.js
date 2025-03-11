@@ -1,6 +1,3 @@
-import dayjs from 'dayjs';
-import { FilterType } from './mock/const';
-
 function getRandomArrayElement(items) {
   return items[Math.floor(Math.random() * items.length)];
 }
