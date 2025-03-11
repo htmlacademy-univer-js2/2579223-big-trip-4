@@ -19,7 +19,7 @@ function createEditingFormTemplate(waypoint, waypointDestination, waypointOffers
       const isChecked = offers.includes(offer.id) ? 'checked' : '';
       return `
         <div class="event__offer-selector">
-          <input class="event__offer-checkbox visually-hidden" id="event-offer-${offer.id}" type="checkbox" name="event-offer-${offer.id}" ${isChecked}>
+          <input class="event__offer-checkbox visually-hidden" id="event-offer-${offer.id}" type="checkbox" name="event-offer-${offer.id}" data-offer-id="${offer.id}" ${isChecked}>
           <label class="event__offer-label" for="event-offer-${offer.id}">
             <span class="event__offer-title">${offer.title}</span>
             &plus;&euro;&nbsp;<span class="event__offer-price">${offer.price}</span>
@@ -222,7 +222,7 @@ export default class EditingFormView extends AbstractStatefulView {
     this._setState({
       waypoint: {
         ...this._state.waypoint,
-        offers: checkedBoxes.map((element) => Number(element.dataset.offerId))
+        offers: checkedBoxes.map((element) => element.dataset.offerId)
       }
     });
   };
@@ -246,8 +246,6 @@ export default class EditingFormView extends AbstractStatefulView {
     const updatedWaypoint = {
       ...this._state.waypoint,
       basePrice: Number(this.element.querySelector('.event__input--price').value),
-      offers: Array.from(this.element.querySelectorAll('.event__offer-checkbox:checked'))
-        .map((checkbox) => Number(checkbox.id.replace('event-offer-', ''))),
       destination: this._state.waypointDestination.id,
       dateFrom: this._state.waypoint.dateFrom,
       dateTo: this._state.waypoint.dateTo,
