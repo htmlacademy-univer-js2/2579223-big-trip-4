@@ -11,16 +11,17 @@ export default class WaypointsModel extends Observable {
     this.#waypoints = this.#service.waypoints;
   }
 
-  get waypoints() {
+  getWaypoints() {
     return this.#waypoints;
+  }
+
+  setWaypoints(newWaypoints) {
+    this.#waypoints = [...newWaypoints];
+    this._notify('set', this.#waypoints);
   }
 
   getById(id) {
     return this.#waypoints.find((waypoint) => waypoint.id === id);
-  }
-
-  updateWaypoint(updatedWaypoint) {
-    return this.#waypoints.map((waypoint) => waypoint.id === updatedWaypoint.id ? updatedWaypoint : waypoint);
   }
 
   update(updateType, waypoint) {

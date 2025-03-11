@@ -1,21 +1,21 @@
 import { render, replace, remove } from '../framework/render';
 import EditingFormView from '../view/editing-form-view';
 import WaypointView from '../view/waypoint-view';
-
-const Mode = {
-  DEFAULT: 'DEFAULT',
-  EDITING: 'EDITING'
-};
+import { Mode } from '../mock/const';
 
 export default class WaypointPresenter {
   #waypointsContainer = null;
+
   #destinationsModel = null;
   #offersModel = null;
+
   #waypoint = null;
   #waypointComponent = null;
   #editWaypointComponent = null;
+
   #onDataChange = null;
   #onModeChange = null;
+
   #mode = Mode.DEFAULT;
 
   constructor(waypoint, waypointContainer, destinationsModel, offersModel, onDataChange, onModeChange){

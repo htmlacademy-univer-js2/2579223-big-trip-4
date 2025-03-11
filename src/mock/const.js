@@ -1,3 +1,9 @@
+const UpdateType = {
+  PATCH: 'PATCH',
+  MINOR: 'MINOR',
+  MAJOR: 'MAJOR'
+};
+
 const CITIES = [
   'Amsterdam',
   'Athens',
@@ -47,6 +53,11 @@ const EVENTS_TYPES = [
   'transport',
 ];
 
+const Mode = {
+  DEFAULT: 'DEFAULT',
+  EDITING: 'EDITING'
+};
+
 export {
   CITIES,
   DESCRIPTIONS,
@@ -55,4 +66,6 @@ export {
   OFFERS,
   OFFERS_COUNT,
   WAYPOINTS_COUNT,
+  UpdateType,
+  Mode
 };

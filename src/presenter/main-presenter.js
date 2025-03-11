@@ -5,6 +5,7 @@ import NewEventButtonView from '../view/new-event-button-view';
 import SortingView from '../view/sorting-view';
 import TripInfoView from '../view/trip-info-view';
 import WaypointPresenter from './waypoint-presenter';
+// import { UpdateType } from '../mock/const';
 
 export default class BoardPresenter {
   #boardContainer = null;
@@ -27,7 +28,7 @@ export default class BoardPresenter {
   }
 
   get waypoints() {
-    return this.#waypointsModel.waypoints;
+    return this.#waypointsModel.getWaypoints();
   }
 
   init() {
@@ -41,7 +42,7 @@ export default class BoardPresenter {
 
     // render(new CreatingFormView(), this.#tripEventsList);
 
-    this.#waypointsModel.waypoints.forEach((waypoint) => this.#renderWaypoint(waypoint));
+    this.#waypointsModel.getWaypoints().forEach((waypoint) => this.#renderWaypoint(waypoint));
   }
 
   #renderWaypoint(waypoint) {
@@ -69,4 +70,15 @@ export default class BoardPresenter {
   #handleModeChange = () => {
     this.#waypointPresenters.forEach((waypointPresenter) => waypointPresenter.resetView());
   };
+
+  /*#modelEventHandler = (updateType, data) => {
+    switch (updateType) {
+      case UpdateType.PATCH:
+        this.#waypointPresenters?.get(data.id)?.init(data);
+        break;
+      case UpdateType.MINOR:
+        this.#clearBoard();
+        this.#renderBoard();
+    }
+  };*/
 }
