@@ -35,7 +35,6 @@ export default class BoardPresenter {
     if (filterWaypoints[filterType]) {
       return filterWaypoints[filterType](waypoints);
     } else {
-      console.error(`Ошибка: фильтр "${filterType}" не найден.`);
       return waypoints;
     }
   }
