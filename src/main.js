@@ -3,6 +3,7 @@ import OffersModel from './model/offers-model';
 import WaypointsModel from './model/waypoints-model';
 import BoardPresenter from './presenter/main-presenter';
 import MockService from './service/mock-service';
+import FiltersPresenter from './presenter/filter-presenter';
 
 const siteMainElement = document.querySelector('.page-body');
 const mockService = new MockService();
@@ -16,4 +17,11 @@ const boardPresenter = new BoardPresenter({
   offersModel: offersModel,
   waypointsModel: waypointsModel,
 });
+
+const filtersPresenter = new FiltersPresenter({
+  boardContainer: siteMainElement,
+});
+
 boardPresenter.init();
+filtersPresenter.init();
+
