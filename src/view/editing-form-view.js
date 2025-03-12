@@ -19,7 +19,7 @@ function createEditingFormTemplate(waypoint, waypointDestination, waypointOffers
       const isChecked = offers.includes(offer.id) ? 'checked' : '';
       return `
         <div class="event__offer-selector">
-          <input class="event__offer-checkbox visually-hidden" id="event-offer-${offer.id}" type="checkbox" name="event-offer-${offer.id}" ${isChecked}>
+          <input class="event__offer-checkbox visually-hidden" id="event-offer-${offer.id}" type="checkbox" name="event-offer-${offer.id}" data-offer-id="${offer.id}" ${isChecked}>
           <label class="event__offer-label" for="event-offer-${offer.id}">
             <span class="event__offer-title">${offer.title}</span>
             &plus;&euro;&nbsp;<span class="event__offer-price">${offer.price}</span>
@@ -85,7 +85,7 @@ function createEditingFormTemplate(waypoint, waypointDestination, waypointOffers
               <span class="visually-hidden">Price</span>
               &euro;
             </label>
-            <input class="event__input event__input--price" id="event-price-1" type="text" name="event-price" value="${basePrice}">
+            <input class="event__input event__input--price" id="event-price-1" type="number" name="event-price" value="${basePrice}">
           </div>
 
           <button class="event__save-btn btn btn--blue" type="submit">Save</button>
@@ -222,7 +222,7 @@ export default class EditingFormView extends AbstractStatefulView {
     this._setState({
       waypoint: {
         ...this._state.waypoint,
-        offers: checkedBoxes.map((element) => Number(element.dataset.offerId))
+        offers: checkedBoxes.map((element) => element.dataset.offerId)
       }
     });
   };
@@ -243,7 +243,15 @@ export default class EditingFormView extends AbstractStatefulView {
 
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
-    this.#onSubmitClick();
+    const updatedWaypoint = {
+      ...this._state.waypoint,
+      basePrice: Number(this.element.querySelector('.event__input--price').value),
+      destination: this._state.waypointDestination.id,
+      dateFrom: this._state.waypoint.dateFrom,
+      dateTo: this._state.waypoint.dateTo,
+    };
+
+    this.#onSubmitClick(updatedWaypoint);
   };
 
   #setDatePickers() {

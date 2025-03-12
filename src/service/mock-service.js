@@ -66,4 +66,18 @@ export default class MockService {
       return generateWaypoint(type, destination.id, offerIds);
     });
   }
+
+  updateWaypoint(updatedWaypoint) {
+    return updatedWaypoint;
+    // to do: здесь сервис должен будет обновить данные о точке маршрута
+  }
+
+  addWaypoint(waypointData) {
+    return {...waypointData, id: crypto.randomUUID()};
+    // to do: здесь сервис должен связаться с api для добавления точки маршрута
+  }
+
+  deleteWaypoint() {
+    // to do: здесь сервис должен обратиться к api для удаления точки маршрута
+  }
 }

@@ -32,7 +32,20 @@ function createFiltersTemplate() {
 }
 
 export default class FiltersView extends AbstractView {
+  #onFilterChange = null;
+
+  constructor(onFilterChange) {
+    super();
+    this.#onFilterChange = onFilterChange;
+    this.element.addEventListener('change', this.#filterChangeHandler);
+  }
+
   get template() {
     return createFiltersTemplate();
   }
+
+  #filterChangeHandler = (evt) => {
+    evt.preventDefault();
+    this.#onFilterChange(evt.target.value);
+  };
 }

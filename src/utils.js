@@ -9,4 +9,15 @@ const getRandomInteger = (min, max) => {
   return Math.floor(result);
 };
 
-export { getRandomArrayElement, getRandomInteger };
+const filterWaypoints = {
+  everything: (waypoints) => waypoints,
+  future: (waypoints) => waypoints.filter((wp) => new Date(wp.dateFrom) > new Date()),
+  past: (waypoints) => waypoints.filter((wp) => new Date(wp.dateTo) < new Date()),
+  present: (waypoints) => waypoints.filter((wp) => new Date(wp.dateFrom) <= new Date() && new Date(wp.dateTo) >= new Date())
+};
+
+function updateItem(items, update) {
+  return items.map((item) => item.id === update.id ? update : item);
+}
+
+export { getRandomArrayElement, getRandomInteger,updateItem, filterWaypoints };
